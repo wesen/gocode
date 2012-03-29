@@ -4,7 +4,6 @@ import (
 	"go/parser"
 	"unicode"
 	"unicode/utf8"
-	"fmt"
 )
 
 type cursor_context struct {
@@ -148,7 +147,6 @@ func (c *auto_complete_context) deduce_cursor_context(file []byte, cursor int) (
 		// we're '<whatever>.'
 		// figure out decl, Parital is ""
 		decl := c.deduce_cursor_decl(&iter)
-		fmt.Println("cursor decl", decl.name)
 		return cursor_context{decl, ""}, decl != nil
 	}
 

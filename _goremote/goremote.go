@@ -218,6 +218,7 @@ func wrap_function(out io.Writer, fun *ast.FuncDecl) {
 }
 
 func process_file(out io.Writer, filename string) {
+	fmt.Println("process file", filename)
 	fset := token.NewFileSet()
 	file, err := parser.ParseFile(fset, filename, nil, 0)
 	if err != nil {

@@ -12,6 +12,7 @@ func parse_decl_list(fset *token.FileSet, data []byte) ([]ast.Decl, error) {
 	var buf bytes.Buffer
 	buf.WriteString("package p;")
 	buf.Write(data)
+	fmt.Println("parse decl list", string(data))
 	file, err := parser.ParseFile(fset, "", buf.Bytes(), 0)
 	if err != nil {
 		return file.Decls, err
@@ -51,6 +52,7 @@ func (f *auto_complete_file) offset(p token.Pos) int {
 
 // this one is used for current file buffer exclusively
 func (f *auto_complete_file) process_data(data []byte, filename string) {
+	fmt.Println("process data current file", filename)
 	cur, filedata, block := rip_off_decl(data, f.cursor)
 	file, _ := parser.ParseFile(f.fset, filename, filedata, 0)
 	f.package_name = package_name(file)
@@ -119,10 +121,14 @@ func (f *auto_complete_file) process_decl(decl ast.Decl) {
 		for i, name := range data.names {
 			typ, v, vi := data.type_value_index(i)
 
+			fmt.Println("process decl", name.Name)
 			d := new_decl_full(name.Name, class, 0, typ, v, vi, prevscope)
 			if d == nil {
 				return
 			}
+
+			pos := f.fset.Position(v.Pos())
+			fmt.Println("position ", name.Name, pos)
 
 			f.scope.add_named_decl(d)
 		}
@@ -217,7 +223,12 @@ func (f *auto_complete_file) process_select_stmt(a *ast.SelectStmt) {
 			//if lastCursorAfter.Lhs != nil && lastCursorAfter.Tok == token.DEFINE {
 			if astmt, ok := last_cursor_after.Comm.(*ast.AssignStmt); ok && astmt.Tok == token.DEFINE {
 				vname := astmt.Lhs[0].(*ast.Ident).Name
-				v := new_decl_var(vname, nil, astmt.Rhs[0], -1, prevscope)
+				val := astmt.Rhs[0]
+				v := new_decl_var(vname, nil, val, -1, prevscope)
+
+				pos := f.fset.Position(val.Pos())
+				fmt.Println("position ", vname, pos)
+
 				f.scope.add_named_decl(v)
 			}
 		}
@@ -343,6 +354,9 @@ func (f *auto_complete_file) process_assign_stmt(a *ast.AssignStmt) {
 			continue
 		}
 
+		pos := f.fset.Position(v.Pos())
+		fmt.Println("position", name.Name, pos.Filename, pos)
+		
 		f.scope.add_named_decl(d)
 	}
 }

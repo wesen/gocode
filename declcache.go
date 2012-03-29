@@ -104,6 +104,7 @@ func (f *decl_file_cache) update() {
 }
 
 func (f *decl_file_cache) read_file() {
+	fmt.Println("read file")
 	var data []byte
 	data, f.error = file_reader.read_file(f.name)
 	if f.error != nil {
@@ -125,7 +126,9 @@ func (f *decl_file_cache) process_data(data []byte, filename string) {
 	}
 	f.packages = new_package_imports(f.name, file.Decls)
 	f.decls = make(map[string]*decl, len(file.Decls))
+	fmt.Println("file.Decls", file.Decls, string(data))
 	for _, decl := range file.Decls {
+		fmt.Println("decl", decl)
 		append_to_top_decls(f.decls, decl, f.filescope, f.fset)
 	}
 }

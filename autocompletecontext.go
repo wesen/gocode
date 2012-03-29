@@ -73,6 +73,11 @@ func (b *out_buffers) append_decl(p, name string, decl *decl, class decl_class) 
 		return
 	}
 
+	fmt.Println("append decl", decl.name)
+	if decl.value != nil {
+		fmt.Println("pos", decl.value.Pos())
+	}
+
 	pkg := decl.pkg
 	pkgName := ""
 	if pkg != nil {
@@ -221,7 +226,6 @@ func (c *auto_complete_context) apropos(file []byte, filename string, cursor int
 
 	partial := 0
 	cc, ok := c.deduce_cursor_context(file, cursor)
-	fmt.Println("cc.decl.class", cc.decl.class, "cc.decl.name", cc.decl.name, "cc.decl.alias", cc.decl.alias)
 	if !ok {
 		return nil, 0
 	}
@@ -413,6 +417,7 @@ func find_other_package_files(filename, package_name string) []string {
 }
 
 func file_package_name(filename string) string {
+	fmt.Println("file package", filename)
 	file, _ := parser.ParseFile(token.NewFileSet(), filename, nil, parser.PackageClauseOnly)
 	return file.Name.Name
 }

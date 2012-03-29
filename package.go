@@ -84,6 +84,7 @@ func (m *package_file_cache) update_cache() {
 		m.mtime = statmtime
 
 		data, err := file_reader.read_file(fname)
+		fmt.Println("index package ", fname)
 		if err != nil {
 			return
 		}
@@ -157,7 +158,7 @@ func add_ast_decl_to_package(pkg *decl, decl ast.Decl, scope *scope) {
 		for i, name := range data.names {
 			typ, v, vi := data.type_value_index(i)
 
-			fmt.Println("add decl to package", pkg.alias, "name", pkg.name)
+//			fmt.Println("add decl to package", pkg.alias, "name", pkg.name)
 			d := new_decl_full(name.Name, class, decl_foreign, typ, v, vi, scope)
 			if d == nil {
 				return
