@@ -76,6 +76,7 @@ type decl struct {
 	typ   ast.Expr
 	class decl_class
 	flags decl_flags
+	pos token.Position
 
 	// functions for interface type, fields+methods for struct type
 	children map[string]*decl

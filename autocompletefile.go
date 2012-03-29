@@ -50,9 +50,9 @@ func (f *auto_complete_file) offset(p token.Pos) int {
 }
 
 // this one is used for current file buffer exclusively
-func (f *auto_complete_file) process_data(data []byte) {
+func (f *auto_complete_file) process_data(data []byte, filename string) {
 	cur, filedata, block := rip_off_decl(data, f.cursor)
-	file, _ := parser.ParseFile(f.fset, "", filedata, 0)
+	file, _ := parser.ParseFile(f.fset, filename, filedata, 0)
 	f.package_name = package_name(file)
 
 	f.decls = make(map[string]*decl)
@@ -67,7 +67,7 @@ func (f *auto_complete_file) process_data(data []byte) {
 
 	// process all top-level declarations
 	for _, decl := range file.Decls {
-		append_to_top_decls(f.decls, decl, f.scope)
+		append_to_top_decls(f.decls, decl, f.scope, f.fset)
 	}
 	if block != nil {
 		// process local function as top-level declaration
@@ -78,7 +78,7 @@ func (f *auto_complete_file) process_data(data []byte) {
 		}
 
 		for _, decl := range decls {
-			append_to_top_decls(f.decls, decl, f.scope)
+			append_to_top_decls(f.decls, decl, f.scope, f.fset)
 		}
 
 		// process function internals

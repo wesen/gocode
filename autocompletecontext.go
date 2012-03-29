@@ -27,6 +27,7 @@ type candidate struct {
 	Type  string
 	Class decl_class
 	Package string
+	Position *token.Position
 }
 
 type out_buffers struct {
@@ -83,6 +84,7 @@ func (b *out_buffers) append_decl(p, name string, decl *decl, class decl_class) 
 		Type:  b.tmpbuf.String(),
 		Package: pkgName,
 		Class: decl.class,
+		Position: &decl.pos,
 	})
 	b.tmpbuf.Reset()
 }
@@ -206,7 +208,7 @@ func (c *auto_complete_context) apropos(file []byte, filename string, cursor int
 
 	// Does full processing of the currently editted file (top-level declarations plus
 	// active function).
-	c.current.process_data(file)
+		c.current.process_data(file, filename)
 
 	// Updates cache of other files and packages. See the function for details of
 	// the process. At the end merges all the top-level declarations into the package

@@ -115,8 +115,8 @@ func (*json_formatter) write_candidates(candidates []candidate, num int) {
 		if i != 0 {
 			fmt.Printf(", ")
 		}
-		fmt.Printf(`{"class": "%s", "name": "%s", "type": "%s", "package": "%s"}`,
-			c.Class, c.Name, c.Type, c.Package)
+		fmt.Printf(`{"class": "%s", "name": "%s", "type": "%s", "package": "%s", "position": "%s"}`,
+			c.Class, c.Name, c.Type, c.Package, c.Position)
 	}
 	fmt.Print("]]")
 }
