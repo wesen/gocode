@@ -90,9 +90,13 @@
 (defun ac-go-get-candidates (strings)
   (let ((prop (lambda (entry)
 		(let ((name (nth 0 entry))
-		      (summary (nth 1 entry)))
+		      (summary (nth 1 entry))
+                      (package (nth 2 entry))
+                      (position (nth 3 entry)))
 		  (propertize name
-			      'summary summary))))
+			      'summary summary
+                              'package package
+                              'position position))))
 	(split (lambda (strings)
 		 (mapcar (lambda (str)
 			   (split-string str ",,"))
@@ -102,8 +106,17 @@
 (defun ac-go-candidates ()
   (ac-go-get-candidates (ac-go-format-autocomplete (ac-go-invoke-autocomplete))))
 
-(defvar ac-source-go
+(defun ac-go-documentation (symbol)
+  (let ((package (popup-item-property symbol 'package))
+        (temp-buffer (generate-new-buffer "*godoc*")))
+    (prog2 (call-process "godoc" nil temp-buffer nil package symbol)
+        (with-current-buffer temp-buffer
+          (buffer-string))
+      (kill-buffer temp-buffer))))
+
+(setq ac-source-go
   '((candidates . ac-go-candidates)
+    (document . ac-go-documentation)
     (prefix . "\\.\\(.*\\)")
     (requires . 0)))
 
