@@ -20,6 +20,7 @@ import (
 type package_import struct {
 	alias string
 	path  string
+	name  string
 }
 
 type package_imports []package_import
@@ -37,10 +38,10 @@ func (pi *package_imports) append_imports(filename string, decls []ast.Decl) {
 		if gd, ok := decl.(*ast.GenDecl); ok && gd.Tok == token.IMPORT {
 			for _, spec := range gd.Specs {
 				imp := spec.(*ast.ImportSpec)
-				path, alias := path_and_alias(imp)
-				path, ok := abs_path_for_package(filename, path)
+				name, alias := path_and_alias(imp)
+				path, ok := abs_path_for_package(filename, name)
 				if ok {
-					pi.append_import(alias, path)
+					pi.append_import(alias, path, name)
 				}
 			}
 		} else {
@@ -50,12 +51,12 @@ func (pi *package_imports) append_imports(filename string, decls []ast.Decl) {
 }
 
 // Simple vector-like append.
-func (pi *package_imports) append_import(alias, path string) {
+	func (pi *package_imports) append_import(alias, path, name string) {
 	if alias == "_" {
 		return
 	}
 
-	*pi = append(*pi, package_import{alias, path})
+	*pi = append(*pi, package_import{alias, path, name})
 }
 
 //-------------------------------------------------------------------------
