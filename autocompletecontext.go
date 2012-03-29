@@ -26,6 +26,7 @@ type candidate struct {
 	Name  string
 	Type  string
 	Class decl_class
+	Package string
 }
 
 type out_buffers struct {
@@ -71,10 +72,16 @@ func (b *out_buffers) append_decl(p, name string, decl *decl, class decl_class) 
 		return
 	}
 
+	pkg := decl.pkg
+	pkgName := ""
+	if pkg != nil {
+		pkgName = pkg.alias
+	}
 	decl.pretty_print_type(b.tmpbuf)
 	b.candidates = append(b.candidates, candidate{
 		Name:  name,
 		Type:  b.tmpbuf.String(),
+		Package: pkgName,
 		Class: decl.class,
 	})
 	b.tmpbuf.Reset()
