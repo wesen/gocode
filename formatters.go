@@ -82,7 +82,7 @@ func (*emacs_formatter) write_candidates(candidates []candidate, num int) {
 		if c.Class == decl_func {
 			hint = c.Type
 		}
-		fmt.Printf("%s,,%s\n", c.Name, hint)
+		fmt.Printf("%s,,%s,,%s,,%s\n", c.Name, hint, c.Package, c.Position)
 	}
 }
 
