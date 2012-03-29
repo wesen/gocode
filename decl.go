@@ -71,7 +71,8 @@ type decl struct {
 	// Name starts with '$' if the declaration describes an anonymous type.
 	// '$s_%d' for anonymous struct types
 	// '$i_%d' for anonymous interface types
-	name  string
+	name, alias  string
+	pkg *decl
 	typ   ast.Expr
 	class decl_class
 	flags decl_flags
