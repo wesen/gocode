@@ -111,13 +111,14 @@ func (f *decl_file_cache) read_file() {
 	}
 	data, _ = filter_out_shebang(data)
 
-	f.process_data(data)
+	f.process_data(data, f.name)
 }
 
-func (f *decl_file_cache) process_data(data []byte) {
+func (f *decl_file_cache) process_data(data []byte, filename string) {
+	fmt.Println("process data decl file cache", filename)
 	var file *ast.File
 	f.fset = token.NewFileSet()
-	file, f.error = parser.ParseFile(f.fset, "", data, 0)
+	file, f.error = parser.ParseFile(f.fset, filename, data, 0)
 	f.filescope = new_scope(nil)
 	for _, d := range file.Decls {
 		anonymify_ast(d, 0, f.filescope)
@@ -125,11 +126,11 @@ func (f *decl_file_cache) process_data(data []byte) {
 	f.packages = new_package_imports(f.name, file.Decls)
 	f.decls = make(map[string]*decl, len(file.Decls))
 	for _, decl := range file.Decls {
-		append_to_top_decls(f.decls, decl, f.filescope)
+		append_to_top_decls(f.decls, decl, f.filescope, f.fset)
 	}
 }
 
-func append_to_top_decls(decls map[string]*decl, decl ast.Decl, scope *scope) {
+func append_to_top_decls(decls map[string]*decl, decl ast.Decl, scope *scope, fset *token.FileSet) {
 	foreach_decl(decl, func(data *foreach_decl_struct) {
 		class := ast_decl_class(data.decl)
 		for i, name := range data.names {
@@ -139,6 +140,8 @@ func append_to_top_decls(decls map[string]*decl, decl ast.Decl, scope *scope) {
 			if d == nil {
 				return
 			}
+
+			d.pos = fset.Position(typ.Pos())
 
 			methodof := method_of(decl)
 			if methodof != "" {
