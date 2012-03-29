@@ -141,7 +141,13 @@ func append_to_top_decls(decls map[string]*decl, decl ast.Decl, scope *scope, fs
 				return
 			}
 
-			d.pos = fset.Position(typ.Pos())
+			switch {
+			case v != nil:
+				d.pos = fset.Position(v.Pos())
+				
+			case typ != nil:
+				d.pos = fset.Position(typ.Pos())
+			}
 
 			methodof := method_of(decl)
 			if methodof != "" {

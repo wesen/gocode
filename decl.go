@@ -338,6 +338,7 @@ func method_of(d ast.Decl) string {
 func (other *decl) deep_copy() *decl {
 	d := new(decl)
 	d.name = other.name
+	d.pkg = other.pkg
 	d.class = other.class
 	d.typ = other.typ
 	d.value = other.value

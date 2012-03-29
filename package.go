@@ -162,6 +162,10 @@ func add_ast_decl_to_package(pkg *decl, decl ast.Decl, scope *scope) {
 				return
 			}
 			d.pkg = pkg
+			for _, c := range d.children {
+				c.pkg = pkg
+			}
+			fmt.Println("decl result", d)
 
 			if !name.IsExported() && d.class != decl_type {
 				return
