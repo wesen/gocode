@@ -282,6 +282,7 @@ func check_for_anon_type(t ast.Expr, flags decl_flags, s *scope) ast.Expr {
 //-------------------------------------------------------------------------
 
 func new_decl_full(name string, class decl_class, flags decl_flags, typ, v ast.Expr, vi int, s *scope) *decl {
+	fmt.Println("new decl full", name, "class", class)
 	d := new(decl)
 	d.name = name
 	d.class = class
@@ -296,6 +297,7 @@ func new_decl_full(name string, class decl_class, flags decl_flags, typ, v ast.E
 }
 
 func new_decl(name string, class decl_class, scope *scope) *decl {
+	fmt.Println("new decl", name, "class", class)
 	decl := new(decl)
 	decl.name = name
 	decl.class = class
@@ -308,6 +310,7 @@ func new_decl_var(name string, typ ast.Expr, value ast.Expr, vindex int, scope *
 	if name == "_" {
 		return nil
 	}
+	fmt.Println("new decl var", name)
 	decl := new(decl)
 	decl.name = name
 	decl.class = decl_var
@@ -517,7 +520,9 @@ func type_to_decl(t ast.Expr, scope *scope) *decl {
 }
 
 func expr_to_decl(e ast.Expr, scope *scope) *decl {
+	fmt.Println("expr", e, "scope", *scope)
 	t, scope, _ := infer_type(e, scope, -1)
+	fmt.Println("type", t, "scope", *scope)
 	return type_to_decl(t, scope)
 }
 

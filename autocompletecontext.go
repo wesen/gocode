@@ -153,6 +153,7 @@ func (c *auto_complete_context) update_caches() {
 	// map is used as a set of unique items to prevent double checks
 	ps := make(map[string]*package_file_cache)
 
+	fmt.Println("current packages", c.current.packages)
 	// collect import information from all of the files
 	c.pcache.append_packages(ps, c.current.packages)
 	c.others = get_other_package_files(c.current.name, c.current.package_name, c.declcache)
@@ -218,6 +219,7 @@ func (c *auto_complete_context) apropos(file []byte, filename string, cursor int
 
 	partial := 0
 	cc, ok := c.deduce_cursor_context(file, cursor)
+	fmt.Println("cc.decl.class", cc.decl.class, "cc.decl.name", cc.decl.name, "cc.decl.alias", cc.decl.alias)
 	if !ok {
 		return nil, 0
 	}

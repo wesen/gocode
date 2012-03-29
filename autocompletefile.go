@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"fmt"
 )
 
 func parse_decl_list(fset *token.FileSet, data []byte) ([]ast.Decl, error) {
@@ -56,6 +57,7 @@ func (f *auto_complete_file) process_data(data []byte) {
 
 	f.decls = make(map[string]*decl)
 	f.packages = new_package_imports(f.name, file.Decls)
+	fmt.Println("f.packages", f.packages)
 	f.filescope = new_scope(nil)
 	f.scope = f.filescope
 
