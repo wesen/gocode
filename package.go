@@ -120,6 +120,7 @@ func (m *package_file_cache) process_package_data(data []byte) {
 			// main package
 			if m.main == nil {
 				m.main = new_decl(m.name, decl_package, nil)
+				m.main.alias = m.defalias
 			}
 			add_ast_decl_to_package(m.main, decl, m.scope)
 		} else {
@@ -146,6 +147,7 @@ func (m *package_file_cache) process_package_data(data []byte) {
 
 func (m *package_file_cache) add_package_to_scope(alias, realname string) {
 	d := new_decl(realname, decl_package, nil)
+	d.alias = alias
 	m.scope.add_decl(alias, d)
 }
 
@@ -159,6 +161,7 @@ func add_ast_decl_to_package(pkg *decl, decl ast.Decl, scope *scope) {
 			if d == nil {
 				return
 			}
+			d.pkg = pkg
 
 			if !name.IsExported() && d.class != decl_type {
 				return
